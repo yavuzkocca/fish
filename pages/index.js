@@ -19,20 +19,22 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Wrapper2 />
-      {isConnected ? (
-        <div>
-          {baseSepolia ? (
-            <div className="">
-              <LotteryEntrance className="p-8" />
-            </div>
-          ) : (
-            <div>{`Please switch to BASE Sepolia to see the Raffle...`}</div>
-          )}
-        </div>
-      ) : (
-        <div>Please connect to a Wallet</div>
-      )}
+      <div className="flex justify-evenly items-center">
+        <Wrapper2 />
+        {isConnected ? (
+          <div>
+            {baseSepolia ? (
+              <div className="">
+                <LotteryEntrance className="p-8" />
+              </div>
+            ) : (
+              <div>{`Please switch to BASE Sepolia to see the Raffle...`}</div>
+            )}
+          </div>
+        ) : (
+          <div className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2" >Please connect to a Wallet</div>
+        )}
+      </div>
       <NFTBoxContainer />
 
       <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">

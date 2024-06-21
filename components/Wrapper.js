@@ -322,7 +322,7 @@ export default function Wrapper(userData) {
     if (!userData || !userData.userData) {
         return (
             <div className="container mx-auto px-4 flex items-center justify-center">
-                <p>User data is not available</p>
+
             </div>
         );
     }

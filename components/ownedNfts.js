@@ -62,10 +62,19 @@ export default function NFTBoxContainer() {
     }, [isDisconnected]);
 
     return (
-        <div className="flex flex-wrap justify-center">
-            {nftsData.map((token, index) => (
-                <NFTBox key={index} name={token.name} image={token.image} description={token.description} attributes={token.attributes} />
-            ))}
-        </div>
+        isConnected && nftsData.length > 0 ? (
+            <div className="flex flex-col items-center">
+                <div className="flex justify-center items-center w-full">
+                    <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">Owned NFTs</h5>
+                </div>
+                <div className="flex flex-wrap justify-evenly w-full">
+                    {nftsData.map((token, index) => (
+                        <NFTBox key={index} name={token.name} image={token.image} description={token.description} attributes={token.attributes} />
+                    ))}
+                </div>
+            </div>
+        ) : (
+            <div></div>
+        )
     )
 }
