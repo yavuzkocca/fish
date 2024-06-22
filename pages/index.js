@@ -5,7 +5,7 @@ import LotteryEntrance from "../components/LotteryEntrance";
 import { useAccount } from 'wagmi'
 import { mainnet, sepolia, baseSepolia } from '@wagmi/core/chains'
 import Wrapper2 from "../components/Wrapper2"
-import NFTBoxContainer from "../components/ownedNfts"
+import NFTBoxContainer from "../components/NFTBoxContainer"
 
 
 export default function Home() {

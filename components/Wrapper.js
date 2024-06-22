@@ -1,138 +1,130 @@
 import { useContext, useRef } from 'react';
 import { DataContext } from "../components/DataContext";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
+import hl from '../constants/hl-gen2';
 
 export function sketch(p5, userData1, setData, dataSetRef) {
-    const userData = userData1
-    console.log("sdt" + JSON.stringify(userData))
-    let tokenData = { "hash": `${userData.userData?.walletAddress}${userData.userData.timestamp}${userData.userData.tokenId}` }
-    console.log(`TokenHASH ${tokenData.hash}`)
-    //let tokenData = { "hash": "0xb871cd70edae9a70815520d7e7ea2d65ded3912b02d3f6e283e5f5fad167b313" }
-    class Random {
-        constructor(seed) {
-            this.seed = seed
-        }
-
-        random_dec() {
-            this.seed ^= this.seed << 13
-            this.seed ^= this.seed >> 17
-            this.seed ^= this.seed << 5
-            return ((this.seed < 0 ? ~this.seed + 1 : this.seed) % 1000) / 1000
-        }
-
-        random_between(a, b) {
-            return a + (b - a) * this.random_dec()
-        }
-
-        randomInt(a, b) {
-            return Math.floor(this.random_between(a, b + 1))
-        }
-
-        random_choice(x) {
-            return x[Math.floor(this.random_between(0, x.length * 0.99))]
-        }
-    }
-
-    //let tokenData = { "hash": "0xb871cd70edae9a70815520d7e7ea2d65ded3912b02d3f6e283e5f5fad167b313" }
-    let seed = parseInt(tokenData.hash.slice(0, 16), 16);
-    let rng = new Random(seed);
 
 
-    let paletteColor;
-    let palettePicked;
-    let backgroundColor;
-    let color1;
-    let color2;
-    let palletteColorSelectOnlyOne;
-    let paletteName;
+    const high = hl(userData1)
+
+
+    let angle;
+    let lengthFactor = 0.65;
+
+    //let maxDepth = 10;
+    let maxDepth;
+    let rarityMap0;
+    let maxDeptheName;
+
+    //let minBranchLength = 2;
+    let minBranchLength;
     let rarityMap1;
-    let rarityMap2;
-    let rarityCapi;
-    let rarityPuskul;
-    let mintSize;
-    let jargonTrait;
+
+    //colors
+    let paletteColor;
+    let fromColor;
+    let toColor;
+    let paletteName;
+    //colors
+
+    const artworkWidth = 700;
+    const artworkHeight = 700;
     let timeStamp;
     let otherdata = {};
     let name
 
-    const artworkWidth = 700;
-    const artworkHeight = 700;
+
 
     p5.setup = () => {
-        p5.createCanvas(artworkWidth, artworkHeight);
+        p5.createCanvas(artworkWidth, artworkHeight); //kaca kac yapalm?
+        angle = p5.PI / 4;
         p5.noLoop();
         p5.frameRate(60);
+
         p5.pixelDensity(1);
         // scaleCanvasToFit();
         p5.resizeCanvas(artworkWidth, artworkHeight); // Canvas'ı pencere boyutuna göre yeniden boyutlandır
 
-        color1 = p5.color(1, 22, 39);
-        color2 = p5.color(1, 22, 39);
+        // MAX DEPTH 
+        rarityMap0 = high.randomInt(1, 101); //iki rakami da alio
+        console.log("rr0" + rarityMap0)
+        if (rarityMap0 > 0 && rarityMap0 < 35) {
+            maxDepth = 10;
+            maxDeptheName = "X";
+        } else if (rarityMap0 >= 35 && rarityMap0 < 50) {
+            maxDepth = 30;
+            maxDeptheName = "XXX";
+        } else if (rarityMap0 >= 50 && rarityMap0 < 75) {
+            maxDepth = 50;
+            maxDeptheName = "L";
+        } else if (rarityMap0 >= 75 && rarityMap0 < 102) {
+            maxDepth = 100;
+            maxDeptheName = "C";
+        }
+        // MAX DEPTH 
 
-        backgroundColor = color1
-        paletteColor = rng.randomInt(0, 4);
-        console.log("clr" + paletteColor)
 
+        // minBranchLength = hl.randomInt(2, 4); // buna oran verdim daha iyi, i am awesome
+        //  console.log(minBranchLength);
+        // MIN BRANCH LENGTH ALAN
+        rarityMap1 = high.randomInt(1, 101);
+        if (rarityMap1 > 0 && rarityMap1 < 20) {
+            minBranchLength = 2;
+        } else if (rarityMap1 >= 20 && rarityMap1 < 35) {
+            minBranchLength = 3;
+        } else if (rarityMap1 >= 35 && rarityMap1 < 50) {
+            minBranchLength = 4;
+        } else if (rarityMap1 >= 50 && rarityMap1 < 102) {
+            minBranchLength = 5;
+        }
+        // MIN BRANCH LENGTH ALAN
+
+        //denial..
+        //anger..
+        //bargaining..
+        //depression..
+        //acceptance..
+        //revenge..
+
+        paletteColor = high.randomInt(0, 5); // bu tamam ama isimleri kotu koydum
+        console.log(paletteColor)
+        //    console.log(paletteColor);
         switch (paletteColor) {
             case 0:
-                palettePicked = [
-                    p5.color(1, 22, 39),
-                    p5.color(253, 255, 252),
-                    p5.color(46, 196, 182),
-                    p5.color(231, 29, 54),
-                    p5.color(255, 159, 28)
-                ];
-                paletteName = "Bright Sky";
+                fromColor = p5.color(0, 0, 0);
+                toColor = p5.color(255, 255, 255);
+                paletteName = "depression.";
                 break;
             case 1:
-                palettePicked = [
-                    p5.color(255, 190, 11),
-                    p5.color(251, 86, 7),
-                    p5.color(255, 0, 110),
-                    p5.color(131, 56, 236),
-                    p5.color(58, 134, 255)
-                ];
-                paletteName = "Good Vibes Only";
+                fromColor = p5.color(0, 50, 150);
+                toColor = p5.color(0, 200, 50);
+                paletteName = "acceptance.";
                 break;
             case 2:
-                palettePicked = [
-                    p5.color(218, 215, 205),
-                    p5.color(163, 177, 138),
-                    p5.color(88, 129, 87),
-                    p5.color(58, 90, 64),
-                    p5.color(52, 78, 65)
-                ];
-                paletteName = "Save the Green";
+                fromColor = p5.color(46, 196, 182);
+                toColor = p5.color(255, 159, 0);
+                paletteName = "denial.";
                 break;
             case 3:
-                palettePicked = [
-                    p5.color(247, 37, 133),
-                    p5.color(181, 23, 158),
-                    p5.color(114, 9, 183),
-                    p5.color(72, 12, 168),
-                    p5.color(67, 97, 238)
-                ];
-                paletteName = "Blue Spell";
+                fromColor = p5.color(252, 191, 73);
+                toColor = p5.color(208, 0, 0);
+                paletteName = "revenge.";
                 break;
             case 4:
-                palettePicked = [
-                    p5.color(3, 4, 94),
-                    p5.color(0, 119, 182),
-                    p5.color(0, 180, 216),
-                    p5.color(144, 224, 239),
-                    p5.color(202, 240, 248)
-                ];
-                paletteName = "Blue Spell";
+                fromColor = p5.color(241, 91, 181);
+                toColor = p5.color(2, 195, 154);
+                paletteName = "bargaining.";
+                break;
+            case 5:
+                fromColor = p5.color(217, 4, 41);
+                toColor = p5.color(255, 143, 163);
+                paletteName = "anger.";
                 break;
             default:
-                palettePicked = [
-                    p5.color(1, 22, 39),
-                    p5.color(253, 255, 252),
-                    p5.color(46, 196, 182),
-                    p5.color(231, 29, 54),
-                    p5.color(255, 159, 28)
-                ];
-                paletteName = "Bright Sky";
+                fromColor = p5.color(0, 50, 150);
+                toColor = p5.color(0, 200, 50);
+                paletteName = "acceptance.";
                 break;
         }
     };
@@ -142,139 +134,54 @@ export function sketch(p5, userData1, setData, dataSetRef) {
     // }
 
     p5.draw = () => {
-        p5.background(backgroundColor);
-        p5.translate(p5.width / 2, p5.height / 2);
-        rarityMap1 = rng.randomInt(1, 101);
-        rarityMap2 = rng.randomInt(1, 101);
-        mintSize = rng.randomInt(1, 10);
-        console.log(mintSize);
+        p5.background(0);
+        let gradientFactor = 0.1;
 
-        for (let i = 0; i < 10; i++) {
-            let x1 = p5.cos(i * p5.TWO_PI / 10) * 200;
-            let y1 = p5.sin(i * p5.TWO_PI / 10) * 200;
-            let x2 = p5.cos((i + 1) * p5.TWO_PI / 10) * 200;
-            let y2 = p5.sin((i + 1) * p5.TWO_PI / 10) * 200;
+        function drawBranch(x, y, len, angle, depth) {
+            if (depth > maxDepth) return;
+            let endX = x + len * p5.cos(angle);
+            let endY = y + len * p5.sin(angle);
+            let col = p5.lerpColor(fromColor, toColor, p5.noise(x * gradientFactor, y * gradientFactor));
+            p5.stroke(col);
+            p5.strokeWeight(p5.map(len, minBranchLength, 100, 0.5, 4));
+            p5.line(x, y, endX, endY);
 
-            let palletteColorSelectOnlyOneC1 = rng.randomInt(0, 4);
-            let palletteColorSelectOnlyOneC2 = rng.randomInt(0, 4);
-
-            let c1 = palettePicked[palletteColorSelectOnlyOneC1];
-            let c2 = palettePicked[palletteColorSelectOnlyOneC2];
-
-            for (let j = 0; j < 100; j++) {
-                let t = p5.map(j, 0, 99, 0, 1);
-                let x = p5.lerp(x1, x2, t);
-                let y = p5.lerp(y1, y2, t);
-
-                let n;
-                if (rarityMap1 > 0 && rarityMap1 < 45) {
-                    n = p5.noise(x * 0.005, y * 0.005);
-                    rarityPuskul = 0.005;
-                } else if (rarityMap1 >= 45 && rarityMap1 < 80) {
-                    n = p5.noise(x * 0.025, y * 0.005);
-                    rarityPuskul = 0.025;
-                } else if (rarityMap1 >= 80 && rarityMap1 < 102) {
-                    n = p5.noise(x * 0.015, y * 0.005);
-                    rarityPuskul = 0.015;
-                }
-
-                let angle = p5.map(n, 0, 1, 0, p5.TWO_PI);
-                let len;
-                if (rarityMap2 > 0 && rarityMap2 < 25) {
-                    len = p5.map(p5.sin(angle * 5), -1, 1, 10, 40);
-                    rarityCapi = 40;
-                } else if (rarityMap2 >= 25 && rarityMap2 < 60) {
-                    len = p5.map(p5.sin(angle * 5), -1, 1, 10, 60);
-                    rarityCapi = 60;
-                } else if (rarityMap2 >= 60 && rarityMap2 < 102) {
-                    len = p5.map(p5.sin(angle * 5), -1, 1, 10, 100);
-                    rarityCapi = 100;
-                }
-
-                let x3 = x + p5.cos(angle) * len;
-                let y3 = y + p5.sin(angle) * len;
-
-                let col = p5.lerpColor(c1, c2, t);
-                p5.stroke(col);
-                p5.line(x, y, x3, y3);
-            }
-        }
-
-        for (let i = 0; i < 10; i++) {
-            let x = p5.cos(i * p5.TWO_PI / 10) * 100;
-            let y = p5.sin(i * p5.TWO_PI / 10) * 100;
-
-            for (let j = 0; j < 50; j++) {
-                let angle = p5.map(p5.noise(x * 0.005, y * 0.005), 0, 1, 0, p5.TWO_PI);
-                let radius;
-
-                if (mintSize == 1) {
-                    radius = p5.map(p5.sin(angle * 5), -1, 1, 10, 50);
-                    jargonTrait = "FUD";
-                } else if (mintSize == 2) {
-                    radius = p5.map(p5.sin(angle * 5), -1, 1, 1, 5);
-                    jargonTrait = "NGMI";
-                } else if (mintSize == 3) {
-                    radius = p5.map(p5.sin(angle * 5), -1, 1, 1, 50);
-                    jargonTrait = "FOMO";
-                } else if (mintSize >= 4 && mintSize < 6) {
-                    radius = p5.map(p5.sin(angle * 5), -1, 1, 1, 30);
-                    jargonTrait = "DEGEN";
-                } else if (mintSize >= 6 && mintSize < 8) {
-                    radius = p5.map(p5.sin(angle * 5), 1, 10, 10, 50);
-                    jargonTrait = "OG";
-                } else if (mintSize >= 8 && mintSize < 10) {
-                    radius = p5.map(p5.sin(angle * 5), -1, 1, 10, 5);
-                    jargonTrait = "HODL";
-                } else if (mintSize >= 10) {
-                    radius = p5.map(p5.sin(angle * 5), -10, 10, 10, 5);
-                    jargonTrait = "WHALE";
-                }
-
-                let palletteColorSelectOnlyOne = rng.randomInt(0, 4);
-                let col = palettePicked[palletteColorSelectOnlyOne];
-                p5.noStroke();
-                p5.push();
-                p5.translate(x, y);
-                p5.fill(col);
-                p5.ellipse(0, 0, radius / 2, radius / 2);
-                p5.pop();
-
-                if (sonIkiHane(userData.userData?.timestamp) >= 0 && sonIkiHane(userData.userData.timestamp) < 25) {
-                    x += p5.cos(angle) * radius * 1;
-                    y += p5.sin(angle) * radius * 1;
-                    timeStamp = "Morning";
-                } else if (sonIkiHane(userData.userData?.timestamp) >= 25 && sonIkiHane(userData.userData.timestamp) < 60) {
-                    x += p5.cos(angle) * radius * 2;
-                    y += p5.sin(angle) * radius * 2;
-                    timeStamp = "Noon";
-                } else if (sonIkiHane(userData.userData?.timestamp) >= 60 && sonIkiHane(userData.userData.timestamp) < 100) {
-                    x += p5.cos(angle) * radius * 3;
-                    y += p5.sin(angle) * radius * 3;
-                    timeStamp = "Evening";
+            if (len > minBranchLength) {
+                for (let i = 0; i < 2; i++) {
+                    let newLen = len * lengthFactor * high.random(0.7, 1.3);
+                    // console.log(newLen); bu ne aq
+                    let newAngle = angle + (high.random() > 0.5 ? 1 : -1) * high.random(p5.PI / 10, p5.PI / 4);
+                    drawBranch(endX, endY, newLen, newAngle, depth + 1);
                 }
             }
         }
 
+        for (let i = 0; i < 5; i++) {
+            let xOffset = p5.width / 10;
+            let yOffset = p5.height / 100;
+            let startX = p5.width / 2 + high.random(-xOffset, xOffset);
+            console.log(startX)
+            let startY = p5.height - yOffset;
+            let trunkLength = high.randomInt(50, 150);
+            drawBranch(startX, startY, trunkLength, -p5.PI / 2, 0);
+        }
 
-
+        // TRAITS
         let traits = {
-            "Background Color": backgroundColor,
             "Palette": paletteName,
-            "Capi": rarityCapi,
-            "Puskulu": rarityPuskul,
-            "Jargon": jargonTrait,
-            "Time": timeStamp,
+            "Branch Length": minBranchLength,
+            "Depth": maxDeptheName,
         };
         console.log(JSON.stringify(traits));
 
 
 
-        name = `Fish #${userData.userData?.tokenId}`;
+
+        name = `Fish #${userData1.userData?.tokenId}`;
 
 
         let description =
-            `This is Fish. It has ${backgroundColor} as background color. The timestamp of the mint was ${userData.userData?.timestamp}. The minting wallet address was ${userData.userData?.walletAddress}`
+            `This is Fish. It has ${paletteName} as background color. The timestamp of the mint was ${userData1.userData?.timestamp}. The minting wallet address was ${userData1.userData?.walletAddress}`
             ;
         console.log(description)
 
@@ -292,25 +199,7 @@ export function sketch(p5, userData1, setData, dataSetRef) {
 
     };
 
-    function sonIkiHane(number) {
-        return number % 100;
-    }
 
-    // function scaleCanvasToFit() {
-    //     const artworkAspectRatio = artworkHeight / artworkWidth;
-    //     const canvasElement = document.querySelector('#defaultCanvas0');
-
-    //     const innerWidth = window.innerWidth;
-    //     const innerHeight = window.innerHeight;
-
-    //     if (innerHeight <= innerWidth * artworkAspectRatio) {
-    //         canvasElement.style.height = '100%';
-    //         canvasElement.style.width = 'auto';
-    //     } else {
-    //         canvasElement.style.width = '100%';
-    //         canvasElement.style.height = 'auto';
-    //     }
-    // }
 }
 
 export default function Wrapper(userData) {
@@ -328,7 +217,8 @@ export default function Wrapper(userData) {
     }
 
     return (
-        <div className="container mx-auto px-4 flex items-center justify-center" style={{ display: 'none' }}>
+        //style={{ display: 'none' }}
+        <div className="container mx-auto px-4 flex items-center justify-center" style={{ display: 'none' }} >
             <NextReactP5Wrapper sketch={(p5) => sketch(p5, userData1, setData, dataSetRef)} />
         </div>
     );
