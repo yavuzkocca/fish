@@ -62,19 +62,30 @@ export default function NFTBoxContainer() {
     }, [isDisconnected]);
 
     return (
-        isConnected && nftsData.length > 0 ? (
+        !isConnected ? (
             <div className="flex flex-col items-center">
-                <div className="flex justify-center items-center w-full">
-                    <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">Owned NFTs</h5>
-                </div>
-                <div className="flex flex-wrap justify-evenly w-full">
-                    {nftsData.map((token, index) => (
-                        <NFTBox key={index} name={token.name} image={token.image} description={token.description} attributes={token.attributes} />
-                    ))}
+                <div>
+                    <h5 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 mt-10 tracking-widest">Please Connect your Wallet to View Your NFTs.</h5>
                 </div>
             </div>
         ) : (
-            <div></div>
+            nftsData.length > 0 ? (
+                <div className="flex flex-col items-center">
+                    <div className="flex justify-center items-center w-full  ">
+                        <h5 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 pb-3 pt-3 mt-10 mb-10 tracking-widest border-b border-b-zinc-700 flex flex-row">Owned NFTs</h5>
+                    </div>
+                    <div className="flex flex-wrap justify-evenly w-full ">
+                        {nftsData.map((token, index) => (
+                            <NFTBox key={index} name={token.name} image={token.image} description={token.description} attributes={token.attributes} />
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center">
+                    <h5 className="text-l font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 mt-10 tracking-widest">Your NFT is being generated. Please wait a few minutes to view your unique artwork.<br></br> Thank you for your patience! Do not reload the page before seeing your NFT.</h5>
+                </div>
+            )
         )
     )
+
 }

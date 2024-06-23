@@ -147,7 +147,7 @@ export default function Wrapper2() {
 
     return (
         <div className="px-5 flex justify-items-start">
-            <div className="items-center justify-center bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="items-center justify-center bg-white border border-zinc-200 shadow dark:bg-zinc-800 dark:border-zinc-700">
                 <NextReactP5Wrapper key={reloadKey} sketch={sketch} />
             </div>
         </div>

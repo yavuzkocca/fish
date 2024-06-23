@@ -107,20 +107,30 @@ export default function LotteryEntrance() {
 
     return (
         <>
-            <div className="p-5 flex h-[700px] w-[700px] items-center justify-center">
-                <div className="w-full max-w-2xl items-center justify-center bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <div className="px-5 pb-5">
+            <div className="p-5 flex h-[700px] w-[700px] items-center justify-center ">
+                <div className="w-full max-w-2xl items-center justify-center bg-white border border-zinc-200 shadow dark:bg-zinc-950 dark:border-zinc-700">
+                    <div className="p-5 m-10 ">
                         <div>
-                            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">DrawProof's NFT</h5>
+                            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-3 tracking-widest">TreeVerse</h5>
+                            <p className="leading-6 text-m text-gray-900 dark:text-white mb-4">TreeVerse is a limited-edition generative art collection on the Mint blockchain.
+                                Using p5.js, it features a variety of intricate tree designs with unique traits.
+                                <br></br> Each piece symbolizes a commitment to preserving the natural world, blending technology and nature in a seamless digital experience.
+                                <br></br> TreeVerse offers a unique opportunity to own a digital representation of nature's beauty in the blockchain era.
+                            </p>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-l font-bold text-gray-900 dark:text-white"> 0.001 ETH</span>
+                            <span className="text-l font-semibold text-gray-900 dark:text-white tracking-widest">Price: 0.001 ETH</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-l font-semibold text-gray-900 dark:text-white mt-2 tracking-widest">900 / 10,000 Minted</span>
+                        </div>
+                        <div className="flex items-center justify-between">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-20 py-3.5 rounded ml-auto"
+                                className="bg-green-500 hover:bg-green-700 text-white font-bold px-20 py-3.5 mt-5"
                                 onClick={async () => {
 
                                     await tokenID()
-                                    console.log("ççç")
+                                    console.log("sssssssss")
                                     setTimeout(async () => {
                                         console.log("aaa");
                                         if (userData) {
@@ -138,6 +148,7 @@ export default function LotteryEntrance() {
                                 Mint
                             </button>
                         </div>
+                        <p className="text-sm text-gray-900 dark:text-white tracking-widest mt-5">Please wait 10 seconds before the wallet pops up.</p>
                     </div>
                 </div>
             </div>

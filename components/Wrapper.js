@@ -173,15 +173,10 @@ export function sketch(p5, userData1, setData, dataSetRef) {
             "Depth": maxDeptheName,
         };
         console.log(JSON.stringify(traits));
-
-
-
-
-        name = `Fish #${userData1.userData?.tokenId}`;
-
+        name = `TreeVerse #${userData1.userData?.tokenId}`;
 
         let description =
-            `This is Fish. It has ${paletteName} as background color. The timestamp of the mint was ${userData1.userData?.timestamp}. The minting wallet address was ${userData1.userData?.walletAddress}`
+            `A limited-edition generative art collection featuring unique tree designs created with p5.js. Each piece blends technology and nature.`
             ;
         console.log(description)
 

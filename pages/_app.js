@@ -5,6 +5,8 @@ import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultConfig,
   RainbowKitProvider,
+  darkTheme,
+  etc
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
@@ -34,7 +36,16 @@ function MyApp({ Component, pageProps }) {
 
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact">
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: '#5EC26A',
+            accentColorForeground: 'white',
+            borderRadius: 'none',
+            fontStack: 'system',
+            overlayBlur: 'small',
+          })}
+          {...etc}
+        >
           <MoralisProvider initializeOnMount={false}>
             <NotificationProvider>
               <DataProvider>
