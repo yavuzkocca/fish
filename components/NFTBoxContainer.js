@@ -44,16 +44,18 @@ export default function NFTBoxContainer() {
 
     useEffect(() => {
         listenToFishMintedEvent();
+        updateUI()
         return () => {
             contract.removeAllListeners("FishMinted");
         };
+
     }, [isConnected]);
 
     useEffect(() => {
         if (isConnected) {
             updateUI()
         }
-    }, [isConnected, balance])
+    }, [balance])
 
     useEffect(() => {
         if (isDisconnected) {

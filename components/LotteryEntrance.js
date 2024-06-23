@@ -22,10 +22,11 @@ export default function LotteryEntrance() {
 
     const { address, chainId } = useAccount();
     const unixTimestamp = Math.floor(Date.now() / 1000);
-    const { data, setData } = useContext(DataContext);
+    const { data, setData, iref, cata, setCata } = useContext(DataContext);
     const [userData, setUserData] = useState(null);
     const [id, setId] = useState(null);
-    const [minting, setMinting] = useState(false);  // Minting state
+    const [minting, setMinting] = useState(false);
+    const [tsupply, setTsupply] = useState(0)
 
 
     const tokenID = async () => {
@@ -60,6 +61,8 @@ export default function LotteryEntrance() {
             handleSuccess(transaction);
             setId(null);
             setUserData(null)
+            setCata(false)
+            setData(null)
             return transaction;
         } catch (error) {
             if (error.code === ethers.errors.INSUFFICIENT_FUNDS) {
@@ -103,10 +106,20 @@ export default function LotteryEntrance() {
                 const lastUri = `https://ipfs.io/ipfs/${cleanUri}`;
                 await mintFish(id, lastUri);
             };
-
             mintFishProcess();
         }
     }, [userData, data, id]);
+
+    useEffect(() => {
+
+        const fetchTotalSupply = async () => {
+            const total = await contract.totalSupply();
+            setTsupply(total.toNumber());
+        };
+        fetchTotalSupply()
+
+    }, [userData, data, id]);
+
 
     return (
         <>
@@ -126,7 +139,7 @@ export default function LotteryEntrance() {
                             <span className="text-l font-semibold text-gray-900 dark:text-white tracking-widest">Price: 0.001 ETH</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-l font-semibold text-gray-900 dark:text-white mt-2 tracking-widest">900 / 10,000 Minted</span>
+                            <span className="text-l font-semibold text-gray-900 dark:text-white mt-2 tracking-widest">{tsupply} / 10,000 Minted</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <button

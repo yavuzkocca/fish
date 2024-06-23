@@ -3,7 +3,7 @@ import { DataContext } from "../components/DataContext";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import hl from '../constants/hl-gen2';
 
-export function sketch(p5, userData1, setData, dataSetRef) {
+export function sketch(p5, userData1, setData, iref, cata, setCata) {
 
 
     const high = hl(userData1)
@@ -185,11 +185,11 @@ export function sketch(p5, userData1, setData, dataSetRef) {
             "description": description,
             "attributes": traits
         }
-
-        if (!dataSetRef.current) {
+        console.log("CATA" + cata)
+        if (cata == false) {
             setData(otherdata);
-            console.log(otherdata)
-            dataSetRef.current = true;
+            console.log("OTH" + JSON.stringify(otherdata))
+            setCata(true);
         }
         console.log(otherdata)
 
@@ -200,14 +200,14 @@ export function sketch(p5, userData1, setData, dataSetRef) {
 
 export default function Wrapper(userData, dataRef) {
     const userData1 = userData
-    const { data, setData } = useContext(DataContext);
-    const dataSetRef = useRef(false)
-    console.log("dr" + dataSetRef.current)
+    const { data, setData, iref, cata, setCata } = useContext(DataContext);
+
+
     console.log(`Wusr ${JSON.stringify(userData1)}`)
     console.log(`Wusr ${JSON.stringify(data)}`)
 
     if (!userData || !userData.userData) {
-        dataSetRef.current = false
+
         return (
             <div className="container mx-auto px-4 flex items-center justify-center">
 
@@ -217,8 +217,8 @@ export default function Wrapper(userData, dataRef) {
 
     return (
         //style={{ display: 'none' }}
-        <div className="container mx-auto px-4 flex items-center justify-center" >
-            <NextReactP5Wrapper sketch={(p5) => sketch(p5, userData1, setData, dataSetRef)} />
+        <div className="container mx-auto px-4 flex items-center justify-center" style={{ display: 'none' }} >
+            <NextReactP5Wrapper sketch={(p5) => sketch(p5, userData1, setData, iref, cata, setCata)} />
         </div>
     );
 }

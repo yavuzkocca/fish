@@ -33,7 +33,7 @@ export const uploadMetaToIPFS = async (imageDataUrl, data) => {
         const cleanUri = imageUri.replace('ipfs://', '')
         const lastUri = `https://ipfs.io/ipfs/${cleanUri}`
 
-        console.log(JSON.stringify(`IOFSDATA` + data))
+        console.log(JSON.stringify(`IOFSDATA` + JSON.stringify(data)))
 
 
         const metadata = {
