@@ -1,15 +1,12 @@
-import FishABI from "../constants/FishABI.json"
-import { useNotification } from "web3uikit"
-import { useAccount } from 'wagmi'
+import FishABI from "../constants/FishABI.json";
+import { useNotification } from "web3uikit";
+import { useAccount } from 'wagmi';
 import { ethers } from "ethers";
 import dotenv from 'dotenv';
-import Wrapper from "./Wrapper"
-import { useContext } from 'react';
+import Wrapper from "./Wrapper";
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../components/DataContext';
-import { useState } from "react"
-
 import { captureCanvasImage } from "../utils/captureCanvasImage";
-
 
 dotenv.config();
 
@@ -23,58 +20,47 @@ export default function LotteryEntrance() {
     const dispatch = useNotification();
     const contract = new ethers.Contract(FishContract, FishABI, signer);
 
-    const { address, isConnecting, isConnected, isDisconnected, chainId } = useAccount();
+    const { address, chainId } = useAccount();
     const unixTimestamp = Math.floor(Date.now() / 1000);
-    const { data } = useContext(DataContext);
-    const [userData, setUserData] = useState(null)
-    const [id, setId] = useState("")
+    const { data, setData } = useContext(DataContext);
+    const [userData, setUserData] = useState(null);
+    const [id, setId] = useState(null);
+    const [minting, setMinting] = useState(false);  // Minting state
+
 
     const tokenID = async () => {
-        const id = await contract.totalSupply()
-        setId(id)
+        const tid = await contract.totalSupply();
+        setId(tid.toNumber());
         const userData = {
             contractAddress: process.env.FISH_CONTRACT,
             chainId: chainId,
             editionSize: 100,
             mintSize: '1',
             mintIteration: '1',
-            // hash: '0xabc...',
-            // blockHash: '0xdef...',
-            // blockNumber: toString(blockNumber),
-            tokenId: id.toNumber(),
+            tokenId: tid.toNumber(),
             walletAddress: address,
             timestamp: unixTimestamp,
-            // gasPrice: '100',
-            // gasUsed: '50',
-            // isCurated: '0',
-        }
-        setUserData(userData)
-    }
+        };
+        setUserData(userData);
+    };
 
-    console.log("dat" + JSON.stringify(data))
-
-
-    console.log(JSON.stringify(userData))
-
-
-
-
+    console.log("dat" + JSON.stringify(data));
+    console.log(JSON.stringify(userData));
+    console.log(id)
 
     async function mintFish(tokenId, URI) {
         const contract = new ethers.Contract(FishContract, FishABI, signer);
-        console.log(URI)
+        console.log(URI);
 
         try {
-
             const transaction = await contract.mintFish(tokenId, URI, {
                 value: ethers.utils.parseEther("0.000001"),
-
             });
             await transaction.wait();
             handleSuccess(transaction);
-            setId("")
+            setId(null);
+            setUserData(null)
             return transaction;
-
         } catch (error) {
             if (error.code === ethers.errors.INSUFFICIENT_FUNDS) {
                 return "Insufficient funds in the wallet.";
@@ -102,8 +88,25 @@ export default function LotteryEntrance() {
             handleNewNotification(tx);
         } catch (error) {
             console.log(error);
+        } finally {
+            setMinting(false);  // İşlem tamamlandığında minting durumunu false yap
         }
     };
+
+    useEffect(() => {
+        if (userData && data && id) {
+            const mintFishProcess = async () => {
+                console.log("aaa");
+                const URL = await captureCanvasImage(data);
+                console.log(URL);
+                const cleanUri = URL.replace('ipfs://', '');
+                const lastUri = `https://ipfs.io/ipfs/${cleanUri}`;
+                await mintFish(id, lastUri);
+            };
+
+            mintFishProcess();
+        }
+    }, [userData, data, id]);
 
     return (
         <>
@@ -112,10 +115,11 @@ export default function LotteryEntrance() {
                     <div className="p-5 m-10 ">
                         <div>
                             <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-3 tracking-widest">TreeVerse</h5>
-                            <p className="leading-6 text-m text-gray-900 dark:text-white mb-4">TreeVerse is a limited-edition generative art collection on the Mint blockchain.
+                            <p className="leading-6 text-m text-gray-900 dark:text-white mb-4">
+                                TreeVerse is a limited-edition generative art collection on the Mint blockchain.
                                 Using p5.js, it features a variety of intricate tree designs with unique traits.
-                                <br></br> Each piece symbolizes a commitment to preserving the natural world, blending technology and nature in a seamless digital experience.
-                                <br></br> TreeVerse offers a unique opportunity to own a digital representation of nature's beauty in the blockchain era.
+                                <br /> Each piece symbolizes a commitment to preserving the natural world, blending technology and nature in a seamless digital experience.
+                                <br /> TreeVerse offers a unique opportunity to own a digital representation of nature's beauty in the blockchain era.
                             </p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -126,26 +130,15 @@ export default function LotteryEntrance() {
                         </div>
                         <div className="flex items-center justify-between">
                             <button
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold px-20 py-3.5 mt-5"
+                                className={`bg-green-500 hover:bg-green-700 text-white font-bold px-20 py-3.5 mt-5 ${minting ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={async () => {
-
-                                    await tokenID()
-                                    console.log("sssssssss")
-                                    setTimeout(async () => {
-                                        console.log("aaa");
-                                        if (userData) {
-                                            const URL = await captureCanvasImage(data);
-                                            console.log(URL);
-                                            const cleanUri = URL.replace('ipfs://', '');
-                                            const lastUri = `https://ipfs.io/ipfs/${cleanUri}`;
-                                            await mintFish(id, lastUri);
-                                        } else {
-                                            console.log('User data is not available after 5 seconds');
-                                        }
-                                    }, 5000);
+                                    setMinting(true);  // Minting işlemini başlat
+                                    await tokenID();
+                                    console.log("sssssssss");
                                 }}
+                                disabled={minting}  // Minting sırasında butonu disable et
                             >
-                                Mint
+                                {minting ? "Minting..." : "Mint"}
                             </button>
                         </div>
                         <p className="text-sm text-gray-900 dark:text-white tracking-widest mt-5">Please wait 10 seconds before the wallet pops up.</p>
@@ -154,7 +147,6 @@ export default function LotteryEntrance() {
             </div>
 
             <Wrapper userData={userData} />
-
         </>
     );
 }

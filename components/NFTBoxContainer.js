@@ -80,11 +80,16 @@ export default function NFTBoxContainer() {
                         ))}
                     </div>
                 </div>
-            ) : (
+            ) : balance == 0 ? (
                 <div className="flex flex-col items-center">
-                    <h5 className="text-l font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 mt-10 tracking-widest">Your NFT is being generated. Please wait a few minutes to view your unique artwork.<br></br> Thank you for your patience! Do not reload the page before seeing your NFT.</h5>
+                    <h5 className="text-l font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 mt-10 tracking-widest"></h5>
                 </div>
-            )
+            ) :
+                (
+                    <div className="flex flex-col items-center">
+                        <h5 className="text-l font-semibold tracking-tight text-zinc-900 dark:text-white mb-2 mt-10 tracking-widest">Your NFT is being generated. Please wait a few minutes to view your unique artwork.<br></br> Thank you for your patience! Do not reload the page before seeing your NFT.</h5>
+                    </div>
+                )
         )
     )
 

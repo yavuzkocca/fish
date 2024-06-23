@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import { DataContext } from "../components/DataContext";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import hl from '../constants/hl-gen2';
@@ -173,7 +173,7 @@ export function sketch(p5, userData1, setData, dataSetRef) {
             "Depth": maxDeptheName,
         };
         console.log(JSON.stringify(traits));
-        name = `TreeVerse #${userData1.userData?.tokenId}`;
+        let name = `TreeVerse #${userData1.userData?.tokenId}`;
 
         let description =
             `A limited-edition generative art collection featuring unique tree designs created with p5.js. Each piece blends technology and nature.`
@@ -188,6 +188,7 @@ export function sketch(p5, userData1, setData, dataSetRef) {
 
         if (!dataSetRef.current) {
             setData(otherdata);
+            console.log(otherdata)
             dataSetRef.current = true;
         }
         console.log(otherdata)
@@ -197,13 +198,16 @@ export function sketch(p5, userData1, setData, dataSetRef) {
 
 }
 
-export default function Wrapper(userData) {
+export default function Wrapper(userData, dataRef) {
     const userData1 = userData
-    const { setData } = useContext(DataContext);
-    const dataSetRef = useRef(false);
-
+    const { data, setData } = useContext(DataContext);
+    const dataSetRef = useRef(false)
+    console.log("dr" + dataSetRef.current)
+    console.log(`Wusr ${JSON.stringify(userData1)}`)
+    console.log(`Wusr ${JSON.stringify(data)}`)
 
     if (!userData || !userData.userData) {
+        dataSetRef.current = false
         return (
             <div className="container mx-auto px-4 flex items-center justify-center">
 
@@ -213,7 +217,7 @@ export default function Wrapper(userData) {
 
     return (
         //style={{ display: 'none' }}
-        <div className="container mx-auto px-4 flex items-center justify-center" style={{ display: 'none' }} >
+        <div className="container mx-auto px-4 flex items-center justify-center" >
             <NextReactP5Wrapper sketch={(p5) => sketch(p5, userData1, setData, dataSetRef)} />
         </div>
     );
