@@ -169,7 +169,7 @@ export function sketch(p5, userData1, setData, iref, cata, setCata) {
         // TRAITS
         let traits = {
             "Palette": paletteName,
-            "Branch Length": minBranchLength,
+            "BranchLength": minBranchLength,
             "Depth": maxDeptheName,
         };
         console.log(JSON.stringify(traits));
