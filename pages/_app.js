@@ -1,12 +1,9 @@
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
 import "../styles/globals.css";
-import '@rainbow-me/rainbowkit/dist/index.css';
 import {
   getDefaultConfig,
   RainbowKitProvider,
-  darkTheme,
-  etc
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
@@ -36,16 +33,7 @@ function MyApp({ Component, pageProps }) {
 
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: '#5EC26A',
-            accentColorForeground: 'white',
-            borderRadius: 'none',
-            fontStack: 'system',
-            overlayBlur: 'small',
-          })}
-          {...etc}
-        >
+        <RainbowKitProvider>
           <MoralisProvider initializeOnMount={false}>
             <NotificationProvider>
               <DataProvider>
