@@ -1,7 +1,7 @@
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
 import "../styles/globals.css";
-import '@rainbow-me/rainbowkit/styles.css';
+import '@rainbow-me/rainbowkit/dist/index.css';
 import {
   getDefaultConfig,
   RainbowKitProvider,
