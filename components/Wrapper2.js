@@ -3,13 +3,11 @@ import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import hl from "../constants/hl-gen";
 
 export default function Wrapper2() {
-    const [reloadKey, setReloadKey] = useState(0); // State tanımı
+    const [reloadKey, setReloadKey] = useState(0);
     const [showReload, setShowReload] = useState(false);
 
     const sketch = (p5) => {
         const high = hl();
-        console.log(high.randomInt(1, 101))
-        console.log(high.random(0.7, 1.3))
 
         let angle;
         let lengthFactor = 0.65;
@@ -21,7 +19,6 @@ export default function Wrapper2() {
         let paletteColor;
         let fromColor;
         let toColor;
-        let paletteName;
         const artworkWidth = 700;
         const artworkHeight = 700;
 
@@ -35,7 +32,6 @@ export default function Wrapper2() {
 
             // MAX DEPTH 
             rarityMap0 = high.randomInt(1, 101);
-            console.log("rrro" + rarityMap0)
             if (rarityMap0 > 0 && rarityMap0 < 35) {
                 maxDepth = 10;
                 maxDeptheName = "X";

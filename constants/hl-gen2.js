@@ -26,13 +26,9 @@ const hl = (userData) => {
     };
   }
 
-  const tokenId =
-    userData.userData.tokenId
-  console.log(tokenId)
+  const tokenId = userData.userData.tokenId
   const walletAddress = userData.userData.walletAddress
-  console.log(walletAddress)
-  const timestamp =
-    userData.userData.timestamp
+  const timestamp = userData.userData.timestamp
   const seed = xmur3(walletAddress + tokenId + timestamp);
 
   const hl = {

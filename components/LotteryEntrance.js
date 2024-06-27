@@ -35,9 +35,6 @@ export default function LotteryEntrance() {
         const userData = {
             contractAddress: process.env.FISH_CONTRACT,
             chainId: chainId,
-            editionSize: 100,
-            mintSize: '1',
-            mintIteration: '1',
             tokenId: tid.toNumber(),
             walletAddress: address,
             timestamp: unixTimestamp,
@@ -45,14 +42,8 @@ export default function LotteryEntrance() {
         setUserData(userData);
     };
 
-    console.log("dat" + JSON.stringify(data));
-    console.log(JSON.stringify(userData));
-    console.log(id)
-
     async function mintFish(tokenId, URI) {
         const contract = new ethers.Contract(FishContract, FishABI, signer);
-        console.log(URI);
-
         try {
             const transaction = await contract.mintFish(tokenId, URI, {
                 value: ethers.utils.parseEther("0.000001"),
@@ -92,16 +83,14 @@ export default function LotteryEntrance() {
         } catch (error) {
             console.log(error);
         } finally {
-            setMinting(false);  // İşlem tamamlandığında minting durumunu false yap
+            setMinting(false);
         }
     };
 
     useEffect(() => {
         if (userData && data && id) {
             const mintFishProcess = async () => {
-                console.log("aaa");
                 const URL = await captureCanvasImage(data);
-                console.log(URL);
                 const cleanUri = URL.replace('ipfs://', '');
                 const lastUri = `https://ipfs.io/ipfs/${cleanUri}`;
                 await mintFish(id, lastUri);
@@ -145,11 +134,10 @@ export default function LotteryEntrance() {
                             <button
                                 className={`bg-green-500 hover:bg-green-700 text-white font-bold px-20 py-3.5 mt-5 ${minting ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={async () => {
-                                    setMinting(true);  // Minting işlemini başlat
+                                    setMinting(true);
                                     await tokenID();
-                                    console.log("sssssssss");
                                 }}
-                                disabled={minting}  // Minting sırasında butonu disable et
+                                disabled={minting}
                             >
                                 {minting ? "Minting..." : "Mint"}
                             </button>
