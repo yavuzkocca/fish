@@ -39,6 +39,7 @@ function MyApp({ Component, pageProps }) {
           theme={darkTheme({
             accentColor: '#5EC26A',
             accentColorForeground: 'white',
+            borderRadius: 'none',
           })}
         >
           <MoralisProvider initializeOnMount={false}>
