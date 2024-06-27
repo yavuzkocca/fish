@@ -1,9 +1,11 @@
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
 import "../styles/globals.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultConfig,
   RainbowKitProvider,
+  darkTheme
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
@@ -22,7 +24,7 @@ const config = getDefaultConfig({
   appName: 'Raffle',
   projectId: '6748d532ac67647cd2eec1b96272ba77',
   chains: [baseSepolia],
-  ssr: false, // If your dApp uses server side rendering (SSR)
+  ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
 
@@ -33,7 +35,12 @@ function MyApp({ Component, pageProps }) {
 
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: '#5EC26A',
+            accentColorForeground: 'white',
+          })}
+        >
           <MoralisProvider initializeOnMount={false}>
             <NotificationProvider>
               <DataProvider>
