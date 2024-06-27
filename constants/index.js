@@ -1,5 +1,5 @@
 
-const FishABI = require("./FishABI.json")
+const TreeABI = require("./TreeABI.json")
 module.exports = {
-    FishABI,
+    TreeABI,
 }

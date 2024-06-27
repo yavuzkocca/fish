@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import NFTBox from "./nftBox"
-import FishABI from "../constants/FishABI.json"
+import TreeABI from "../constants/TreeABI.json"
 import { useAccount } from 'wagmi'
 import { ethers } from "ethers";
 import dotenv from 'dotenv';
@@ -10,13 +10,13 @@ export default function NFTBoxContainer() {
     const [balance, setBalance] = useState("")
     const [nftsData, setNftsData] = useState([])
     const provider = new ethers.providers.JsonRpcProvider(`https://base-sepolia.g.alchemy.com/v2/${process.env.BASE_SEPOLIA_PROVIDER}`);
-    const FishContract = process.env.FISH_CONTRACT;
-    const contract = new ethers.Contract(FishContract, FishABI, provider);
+    const TreeContract = process.env.TREE_CONTRACT;
+    const contract = new ethers.Contract(TreeContract, TreeABI, provider);
 
     const { address, isConnecting, isConnected, isDisconnected, chainId } = useAccount();
 
-    const listenToFishMintedEvent = async () => {
-        contract.on("FishMinted", (owner, tokenId, tokenURI, event) => {
+    const listenToTreeMintedEvent = async () => {
+        contract.on("TreeMinted", (owner, tokenId, tokenURI, event) => {
             updateUI()
         });
     };
@@ -43,10 +43,10 @@ export default function NFTBoxContainer() {
     }
 
     useEffect(() => {
-        listenToFishMintedEvent();
+        listenToTreeMintedEvent();
         updateUI()
         return () => {
-            contract.removeAllListeners("FishMinted");
+            contract.removeAllListeners("TreeMinted");
         };
 
     }, [isConnected]);

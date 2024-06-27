@@ -1,4 +1,4 @@
-import FishABI from "../constants/FishABI.json";
+import TreeABI from "../constants/TreeABI.json";
 import { useNotification } from "web3uikit";
 import { useAccount } from 'wagmi';
 import { ethers } from "ethers";
@@ -12,13 +12,13 @@ dotenv.config();
 
 export default function LotteryEntrance() {
     const provider = new ethers.providers.JsonRpcProvider(`https://base-sepolia.g.alchemy.com/v2/${process.env.BASE_SEPOLIA_PROVIDER}`);
-    const FishContract = process.env.FISH_CONTRACT;
+    const TreeContract = process.env.TREE_CONTRACT;
 
     const provide = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provide.getSigner();
 
     const dispatch = useNotification();
-    const contract = new ethers.Contract(FishContract, FishABI, signer);
+    const contract = new ethers.Contract(TreeContract, TreeABI, signer);
 
     const { address, chainId } = useAccount();
     const unixTimestamp = Math.floor(Date.now() / 1000);
@@ -33,7 +33,7 @@ export default function LotteryEntrance() {
         const tid = await contract.totalSupply();
         setId(tid.toNumber());
         const userData = {
-            contractAddress: process.env.FISH_CONTRACT,
+            contractAddress: process.env.TREE_CONTRACT,
             chainId: chainId,
             tokenId: tid.toNumber(),
             walletAddress: address,
@@ -42,10 +42,10 @@ export default function LotteryEntrance() {
         setUserData(userData);
     };
 
-    async function mintFish(tokenId, URI) {
-        const contract = new ethers.Contract(FishContract, FishABI, signer);
+    async function mintTree(tokenId, URI) {
+        const contract = new ethers.Contract(TreeContract, TreeABI, signer);
         try {
-            const transaction = await contract.mintFish(tokenId, URI, {
+            const transaction = await contract.mintTree(tokenId, URI, {
                 value: ethers.utils.parseEther("0.000001"),
             });
             await transaction.wait();
@@ -89,13 +89,13 @@ export default function LotteryEntrance() {
 
     useEffect(() => {
         if (userData && data && id) {
-            const mintFishProcess = async () => {
+            const mintTreeProcess = async () => {
                 const URL = await captureCanvasImage(data);
                 const cleanUri = URL.replace('ipfs://', '');
                 const lastUri = `https://ipfs.io/ipfs/${cleanUri}`;
-                await mintFish(id, lastUri);
+                await mintTree(id, lastUri);
             };
-            mintFishProcess();
+            mintTreeProcess();
         }
     }, [userData, data, id]);
 
